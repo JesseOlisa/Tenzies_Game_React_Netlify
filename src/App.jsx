@@ -26,17 +26,13 @@ export default function App(){
             setTenzies(true);
             setStartGame(false);
             setBestTime(prevBestTime => {
-                if(prevBestTime === 0){
+                if(prevBestTime === 0 || duration < prevBestTime){
                     localStorage.setItem("bestTime", duration)
                     return duration
                 }
-                if(duration > prevBestTime){
+                else{
                     return prevBestTime
-                } else {
-                    localStorage.setItem("bestTime", duration)
-                    return duration
                 }
-                
             });
         }
     }, [dice])
