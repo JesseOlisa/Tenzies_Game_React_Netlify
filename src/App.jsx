@@ -13,7 +13,7 @@ export default function App(){
     const [tenzies, setTenzies] = React.useState(false)
     const [duration, setDuration] = React.useState(0);
     const [startGame, setStartGame] = React.useState(false);
-    const [bestTime, setBestTime] = React.useState(localStorage.getItem("bestTime") || 0)
+    const [bestTime, setBestTime] = React.useState(JSON.parse(localStorage.getItem("bestTime")) || 0)
 
   
     /**************USE EFFECTS****************/
@@ -25,7 +25,19 @@ export default function App(){
         if(isAllHeld && isAllSameValue) {
             setTenzies(true);
             setStartGame(false);
-            setBestTime(duration);
+            setBestTime(prevBestTime => {
+                if(prevBestTime === 0){
+                    localStorage.setItem("bestTime", duration)
+                    return duration
+                }
+                if(duration > prevBestTime){
+                    return prevBestTime
+                } else {
+                    localStorage.setItem("bestTime", duration)
+                    return duration
+                }
+                
+            });
         }
     }, [dice])
 
@@ -40,12 +52,6 @@ export default function App(){
         return () => clearInterval(timer);
     }, [startGame]);
 
-    //Effect to save bestscore in localstorage
-    React.useEffect(() => {
-        if(duration < bestTime) {
-            localStorage.setItem("bestTime", bestTime)
-        }
-    }, [bestTime])
 
     /**************FUNCTIONS****************/
 
@@ -164,3 +170,4 @@ export default function App(){
        </div> 
     )
 }
+
